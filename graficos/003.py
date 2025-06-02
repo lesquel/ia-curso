@@ -12,19 +12,15 @@ total_ventas = sum(ventas)
 acumulado = np.cumsum(ventas)
 porcentaje_acumulado = acumulado / total_ventas * 100
 
-# Configuración del gráfico
-fig, ax1 = plt.subplots(figsize=(12, 8))
-
-# --- Tarea 5: Gráfico circular ---
-# Crear un eje para el gráfico circular
-ax_pie = fig.add_axes([0.35, 0.35, 0.3, 0.3])  # [left, bottom, width, height]
-
-# Colores para las porciones
+# --------------------------------------------------------
+# Tarea 5: Gráfico circular (participación en ventas)
+# --------------------------------------------------------
+plt.figure(figsize=(8, 8))
 colors = ['#FF9999', '#66B2FF', '#99FF99']
 explode = (0.1, 0.05, 0)  # Destacar San Francisco
 
 # Dibujar el gráfico circular
-wedges, texts, autotexts = ax_pie.pie(
+plt.pie(
     participacion,
     labels=ciudades,
     autopct='%1.0f%%',
@@ -32,22 +28,32 @@ wedges, texts, autotexts = ax_pie.pie(
     colors=colors,
     explode=explode,
     shadow=True,
-    textprops={'fontsize': 10, 'fontweight': 'bold'},
+    textprops={'fontsize': 12, 'fontweight': 'bold'},
     wedgeprops={'edgecolor': 'black', 'linewidth': 1}
 )
 
-# Hacer el gráfico circular más visible
-plt.setp(autotexts, size=12, weight="bold", color='black')
-ax_pie.set_title('Participación en Ventas de Helados', fontsize=14, fontweight='bold')
-ax_pie.axis('equal')  # Asegura que el pastel sea circular
+plt.title('Participación en Ventas de Helados', fontsize=16, pad=20)
+plt.axis('equal')  # Asegura que el pastel sea circular
 
-# --- Tarea 6: Frecuencia acumulada ---
+plt.tight_layout()
+plt.savefig('tarea5_grafico_circular.png', dpi=300)
+plt.show()
+
+# --------------------------------------------------------
+# Tarea 6: Diagrama de Pareto (ventas + frecuencia acumulada)
+# --------------------------------------------------------
+fig, ax1 = plt.subplots(figsize=(10, 6))
+
+# Colores para las barras
+colors = ['#FF9999', '#66B2FF', '#99FF99']
+
 # Gráfico de barras para ventas
-bars = ax1.bar(ciudades, ventas, color=colors, edgecolor='black', alpha=0.7)
-ax1.set_title('Ventas por Ciudad con Frecuencia Acumulada', fontsize=16, pad=20, fontweight='bold')
+bars = ax1.bar(ciudades, ventas, color=colors, edgecolor='black', alpha=0.9)
+ax1.set_title('Ventas por Ciudad con Frecuencia Acumulada', fontsize=16, pad=20)
 ax1.set_ylabel('Ventas (Unidades)', fontsize=12)
 ax1.set_xlabel('Ciudades', fontsize=12)
 ax1.grid(axis='y', linestyle='--', alpha=0.7)
+ax1.set_ylim(0, max(ventas) * 1.15)
 
 # Añadir valores en las barras
 for bar in bars:
@@ -85,13 +91,16 @@ for i, (ciudad, valor) in enumerate(zip(ciudades, porcentaje_acumulado)):
                  bbox=dict(boxstyle="round,pad=0.2", fc="white", ec="red", alpha=0.7))
 
 # Añadir leyenda
-ax2.legend(loc='upper left', fontsize=12)
+ax2.legend(loc='lower right', fontsize=10)
 
 # Mostrar el total
-fig.text(0.95, 0.95, f'Total Ventas: {total_ventas:,}'.replace(',', '.'), 
-         fontsize=12, ha='right', va='top',
-         bbox=dict(boxstyle="round,pad=0.3", fc="white", ec="gray", lw=1))
+plt.annotate(f'Total Ventas: {total_ventas:,}'.replace(',', '.'), 
+            xy=(0.98, 0.95), 
+            xycoords='axes fraction',
+            ha='right', va='top',
+            fontsize=12,
+            bbox=dict(boxstyle="round,pad=0.3", fc="white", ec="gray", lw=1))
 
 plt.tight_layout()
-plt.savefig('ventas_helados_completo.png', dpi=300)
+plt.savefig('tarea6_frecuencia_acumulada.png', dpi=300)
 plt.show()
